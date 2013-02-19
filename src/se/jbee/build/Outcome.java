@@ -11,5 +11,5 @@ public interface Outcome {
 	// outcome("jar").has(jar,class); // jar and class are production rule instance references
 	// outcome("compile).has(class);
 	// outcome("dist").has(jar, javadoc);
-	// outcome("clean").has(); // implicitly given by this illustrates what clean means.
+	// outcome("clean").has(); // implicitly given - but to illustrates what clean means.
 }

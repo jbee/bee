@@ -29,4 +29,7 @@ package se.jbee.build;
  */
 public interface Module {
 
+	// usage example
+	// Module core = module("main");
+	// Module ui = module("ui").uses(main).dependsOn(<dependency>);
 }
