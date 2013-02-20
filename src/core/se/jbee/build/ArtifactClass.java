@@ -29,4 +29,7 @@ public final class ArtifactClass {
 		return "*." + fileExtension;
 	}
 
+	public boolean isSource() {
+		return source;
+	}
 }

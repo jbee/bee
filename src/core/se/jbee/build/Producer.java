@@ -9,13 +9,15 @@ package se.jbee.build;
  */
 public interface Producer {
 
+	/**
+	 * 
+	 * @param input
+	 *            The set of {@link Artifacts} that is processed.
+	 * @param root
+	 *            The root {@link Folder} of the produced artifacts.
+	 */
+	void produce( Artifacts input, Folder root );
+
 	// fluent interface example
-	// in(<module>).produce(class).from(java).with(javac); // class and java are artifacts (that can be filtered as well) 
-	// in(main, ui).produce(jar).from(class).with(jar);
-	// produce(html,css).from(java).with(javadoc);
-	// produce(java).from(java).with(ensureFileHeader(licenceHeaderFile));
-
-	void produce( Production production, Artifacts sources );
-
-	// maybe produce...with should return something (Artifacts) that is later used as input to distributions  
+	// in(<module...>).produce(<artifact-class>).from(<artifact-class>).with(<producer>);
 }
