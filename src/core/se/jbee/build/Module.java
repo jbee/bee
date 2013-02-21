@@ -1,5 +1,6 @@
 package se.jbee.build;
 
+
 /**
  * All modules are direct sub-folders of the {@link Src}.
  * 
@@ -29,6 +30,9 @@ package se.jbee.build;
  */
 public class Module {
 
+	public static void main( String[] args ) {
+
+	}
 	// usage example
 	// Module core = module("main");
 	// Module ui = module("ui").uses(core).dependsOn(<dependency>);
