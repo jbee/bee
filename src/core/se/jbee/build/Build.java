@@ -1,6 +1,5 @@
 package se.jbee.build;
 
-
 /**
  * This is implemented by a concrete project to describe the build using the builder.
  * 
@@ -8,9 +7,5 @@ package se.jbee.build;
  */
 public interface Build {
 
-	void goals();
-
-	void productions();
-
-	//void libraries();
+	void build( Project project );
 }
