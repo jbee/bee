@@ -7,29 +7,27 @@ package se.jbee.build;
  */
 public final class ArtifactClass {
 
-	public static final ArtifactClass JAVA = artifactClass( "java", true );
-	public static final ArtifactClass CLASS = artifactClass( "class", false );
-	public static final ArtifactClass JAR = artifactClass( "jar", false );
+	public static ArtifactClass java = new ArtifactClass( ArtifactType.SOURCE_CODE, "*.java" );
+	public static ArtifactClass c1ass = new ArtifactClass( ArtifactType.BINARY_CODE, "*.class" );
 
-	public static ArtifactClass artifactClass( String fileExtension, boolean source ) {
-		return new ArtifactClass( fileExtension, source );
+	//TODO make a class for the file pattern
+
+	public static ArtifactClass artifactClass( ArtifactType type, String pattern ) {
+		return new ArtifactClass( type, pattern );
 	}
 
-	private final String fileExtension;
-	private final boolean source;
+	private final String pattern;
+	public final ArtifactType type;
 
-	private ArtifactClass( String fileExtension, boolean source ) {
+	private ArtifactClass( ArtifactType type, String pattern ) {
 		super();
-		this.fileExtension = fileExtension;
-		this.source = source;
+		this.pattern = pattern;
+		this.type = type;
 	}
 
 	@Override
 	public String toString() {
-		return "*." + fileExtension;
+		return pattern;
 	}
 
-	public boolean isSource() {
-		return source;
-	}
 }

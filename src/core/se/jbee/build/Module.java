@@ -1,6 +1,5 @@
 package se.jbee.build;
 
-
 /**
  * All modules are direct sub-folders of the {@link Src}.
  * 
@@ -28,13 +27,42 @@ package se.jbee.build;
  * 
  * @author Jan Bernitt (jan@jbee.se)
  */
-public class Module {
+public final class Module {
 
-	public static void main( String[] args ) {
+	private static final Artifact[] NO_ARTIFACTS = new Artifact[0];
+	private static final Library[] NO_LIBRARY_DEPENDENCIES = new Library[0];
+	private static final Module[] NO_MODULE_DEPENDENCIES = new Module[0];
 
+	public static Module module( String name ) {
+		return module( Name.named( name ) );
 	}
-	// usage example
-	// Module core = module("main");
-	// Module ui = module("ui").uses(core).dependsOn(<dependency>);
-	// Module db = module("db).uses(core.restrictedTo(api)); // api is a strategy that filters the core module artifacts so that just those that are part of the API are available
+
+	public static Module module( Name name ) {
+		return new Module( name, NO_ARTIFACTS, NO_MODULE_DEPENDENCIES, NO_LIBRARY_DEPENDENCIES );
+	}
+
+	public final Name name;
+	private final Artifact[] artifacts;
+	private final Module[] modules;
+	private final Library[] libraries;
+
+	private Module( Name name, Artifact[] artifacts, Module[] modules, Library[] libraries ) {
+		super();
+		this.name = name;
+		this.artifacts = artifacts;
+		this.modules = modules;
+		this.libraries = libraries;
+	}
+
+	public Module includes( Artifact... artifacts ) {
+		return new Module( name, artifacts, modules, libraries );
+	}
+
+	public Module uses( Module... modules ) {
+		return new Module( name, artifacts, modules, libraries );
+	}
+
+	public Module uses( Library... libraries ) {
+		return new Module( name, artifacts, modules, libraries );
+	}
 }

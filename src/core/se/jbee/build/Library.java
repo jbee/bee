@@ -1,6 +1,6 @@
 package se.jbee.build;
 
 
-public class Builder {
+public class Library {
 
 }

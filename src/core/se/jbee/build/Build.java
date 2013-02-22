@@ -1,11 +1,16 @@
 package se.jbee.build;
 
+
 /**
  * This is implemented by a concrete project to describe the build using the builder.
  * 
  * @author Jan Bernitt (jan@jbee.se)
  */
-public interface Project {
+public interface Build {
 
-	void build( Builder builder );
+	void goals();
+
+	void productions();
+
+	//void libraries();
 }
