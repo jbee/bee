@@ -27,6 +27,6 @@ public final class Version {
 
 	@Override
 	public String toString() {
-		return "v" + no;
+		return no;
 	}
 }

@@ -7,23 +7,26 @@ import static se.jbee.build.Name.named;
  */
 public final class Artifact {
 
-	public static final Artifact class_vx = artifact( "classes", ArtifactType.BINARY_CODE );
-	public static final Artifact java_vx = artifact( "java", ArtifactType.SOURCE_CODE );
-	public static final Artifact javadoc_vx = artifact( "javadoc", ArtifactType.DOCUMENTATION );
+	public static final Artifact _class = artifact( "classes", ArtifactType.BINARY_CODE, "*.class" );
+	public static final Artifact _java = artifact( "java", ArtifactType.SOURCE_CODE, "*.java" );
+	public static final Artifact javadoc = artifact( "javadoc", ArtifactType.DOCUMENTATION,
+			"*.html" );
 
-	public static Artifact artifact( String name, ArtifactType type ) {
-		return new Artifact( named( name ), type, Version.ANY );
+	public static Artifact artifact( String name, ArtifactType type, String filePattern ) {
+		return new Artifact( named( name ), type, Version.ANY, filePattern );
 	}
 
 	public final Name name;
 	public final ArtifactType type;
 	public final Version version;
+	public final String filePattern;
 
-	private Artifact( Name name, ArtifactType type, Version version ) {
+	private Artifact( Name name, ArtifactType type, Version version, String filePattern ) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.version = version;
+		this.filePattern = filePattern;
 	}
 
 	@Override
@@ -42,6 +45,6 @@ public final class Artifact {
 
 	@Override
 	public String toString() {
-		return name + " " + version + " " + type;
+		return name + "[" + version + "] " + type;
 	}
 }

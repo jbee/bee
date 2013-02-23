@@ -22,6 +22,6 @@ public class Step {
 
 	@Override
 	public String toString() {
-		return module + ": " + production;
+		return module.name + ": " + production;
 	}
 }

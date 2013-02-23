@@ -11,7 +11,7 @@ import com.sun.tools.javac.Main;
 public class Javac
 		implements Producer {
 
-	public static final Producer _1_6 = null;
+	public static final Producer _1_6 = new Javac();
 
 	@Override
 	public void produce( Artifacts input, Folder root ) {

@@ -12,7 +12,7 @@ public class TestExampleBuild {
 			throws Exception {
 		Plan plan = new Plan();
 		ExampleBuild.class.newInstance().build( Project.project( plan ) );
-		assertTrue( plan.canProduce( Artifact.class_vx ) );
+		assertTrue( plan.canProduce( Artifact._class ) );
 		Step[] steps = plan.execution( named( "compile" ) );
 		System.out.println( steps );
 	}
