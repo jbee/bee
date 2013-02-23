@@ -29,40 +29,53 @@ package se.jbee.build;
  */
 public final class Module {
 
+	public static interface Modules {
+
+		void update( Module module );
+	}
+
 	private static final Artifact[] NO_ARTIFACTS = new Artifact[0];
 	private static final Library[] NO_LIBRARY_DEPENDENCIES = new Library[0];
 	private static final Module[] NO_MODULE_DEPENDENCIES = new Module[0];
 
-	public static Module module( String name ) {
-		return module( Name.named( name ) );
-	}
-
-	public static Module module( Name name ) {
-		return new Module( name, NO_ARTIFACTS, NO_MODULE_DEPENDENCIES, NO_LIBRARY_DEPENDENCIES );
+	public static Module module( Name name, Modules modules ) {
+		return new Module( name, modules, NO_ARTIFACTS, NO_MODULE_DEPENDENCIES,
+				NO_LIBRARY_DEPENDENCIES );
 	}
 
 	public final Name name;
+	private final Modules modules;
 	private final Artifact[] artifacts;
-	private final Module[] modules;
+	private final Module[] parents;
 	private final Library[] libraries;
 
-	private Module( Name name, Artifact[] artifacts, Module[] modules, Library[] libraries ) {
+	private Module( Name name, Modules modules, Artifact[] artifacts, Module[] parents,
+			Library[] libraries ) {
 		super();
 		this.name = name;
-		this.artifacts = artifacts;
 		this.modules = modules;
+		this.artifacts = artifacts;
+		this.parents = parents;
 		this.libraries = libraries;
+		modules.update( this );
 	}
 
+	/**
+	 * Defines what kinds of {@link Artifact}s are expected within this module. Just those will be
+	 * processed.
+	 * 
+	 * @param artifacts
+	 * @return
+	 */
 	public Module includes( Artifact... artifacts ) {
-		return new Module( name, artifacts, modules, libraries );
+		return new Module( name, modules, artifacts, parents, libraries );
 	}
 
 	public Module uses( Module... modules ) {
-		return new Module( name, artifacts, modules, libraries );
+		return new Module( name, this.modules, artifacts, modules, libraries );
 	}
 
 	public Module uses( Library... libraries ) {
-		return new Module( name, artifacts, modules, libraries );
+		return new Module( name, modules, artifacts, parents, libraries );
 	}
 }

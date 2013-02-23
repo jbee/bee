@@ -1,7 +1,5 @@
 package se.jbee.build;
 
-import static se.jbee.build.Name.named;
-
 import java.util.Arrays;
 
 /**
@@ -12,37 +10,59 @@ import java.util.Arrays;
  */
 public final class Goal {
 
+	public static interface Goals {
+
+		void update( Goal goal );
+	}
+
 	private static final Module[] NO_BOUNDARY = new Module[0];
 	private static final Subgoal[] NO_SUBGOALS = new Subgoal[0];
 
-	public static Goal goal( String name ) {
-		return is( named( name ) );
-	}
-
-	public static Goal is( Name name ) {
-		return new Goal( name, NO_SUBGOALS );
+	public static Goal goal( Name name, Goals goals ) {
+		return new Goal( name, goals, NO_SUBGOALS, NO_SUBGOALS );
 	}
 
 	public final Name name;
+	private final Goals goals;
 	private final Subgoal[] subgoals;
+	private final Subgoal[] allowes;
 
-	private Goal( Name name, Subgoal[] subgoals ) {
+	private Goal( Name name, Goals goals, Subgoal[] subgoals, Subgoal[] allowes ) {
 		super();
 		this.name = name;
+		this.goals = goals;
 		this.subgoals = subgoals;
+		this.allowes = allowes;
+		goals.update( this );
 	}
 
 	public Goal in( Module... modules ) {
-		Subgoal[] copy = subgoals.clone();
+		final Subgoal[] bound = allowes.length == 0
+			? subgoals
+			: allowes;
+		Subgoal[] copy = boundary( bound, modules );
+		return new Goal( name, goals, copy, allowes );
+	}
+
+	private static Subgoal[] boundary( Subgoal[] a, Module... modules ) {
+		Subgoal[] copy = a.clone();
 		copy[0] = copy[0].in( modules );
-		return new Goal( name, copy );
+		return copy;
 	}
 
 	public Goal is( Artifact artifact ) {
-		Subgoal[] prepanded = new Subgoal[subgoals.length];
-		System.arraycopy( subgoals, 0, prepanded, 1, subgoals.length );
+		return new Goal( name, goals, prepanded( artifact, subgoals ), allowes );
+	}
+
+	public Goal allows( Artifact artifact ) {
+		return new Goal( name, goals, subgoals, prepanded( artifact, allowes ) );
+	}
+
+	private static Subgoal[] prepanded( Artifact artifact, Subgoal[] a ) {
+		Subgoal[] prepanded = new Subgoal[a.length];
+		System.arraycopy( a, 0, prepanded, 1, a.length );
 		prepanded[0] = new Subgoal( artifact, NO_BOUNDARY );
-		return new Goal( name, prepanded );
+		return prepanded;
 	}
 
 	public static class Subgoal {

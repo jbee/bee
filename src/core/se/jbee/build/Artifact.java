@@ -1,30 +1,29 @@
 package se.jbee.build;
 
+import static se.jbee.build.Name.named;
+
 /**
- * An {@link Artifact} is a concrete variant of an {@link ArtifactClass}.
- * 
- * For example a <ocde>.class</code> file for a specific java version is an {@linkplain Artifact} of
- * the {@link ArtifactClass} of any <ocde>.class</code> file (in any version).
- * 
  * @author Jan Bernitt (jan@jbee.se)
- * 
  */
 public final class Artifact {
 
-	public static final Artifact c1ass = artifact( ArtifactClass.c1ass );
-	public static final Artifact java = artifact( ArtifactClass.java );
+	public static final Artifact class_vx = artifact( "classes", ArtifactType.BINARY_CODE );
+	public static final Artifact java_vx = artifact( "java", ArtifactType.SOURCE_CODE );
+	public static final Artifact javadoc_vx = artifact( "javadoc", ArtifactType.DOCUMENTATION );
 
-	public static Artifact artifact( ArtifactClass clazz ) {
-		return new Artifact( clazz, clazz.type );
+	public static Artifact artifact( String name, ArtifactType type ) {
+		return new Artifact( named( name ), type, Version.ANY );
 	}
 
-	public final ArtifactClass clazz;
+	public final Name name;
 	public final ArtifactType type;
+	public final Version version;
 
-	private Artifact( ArtifactClass clazz, ArtifactType type ) {
+	private Artifact( Name name, ArtifactType type, Version version ) {
 		super();
-		this.clazz = clazz;
+		this.name = name;
 		this.type = type;
+		this.version = version;
 	}
 
 }
