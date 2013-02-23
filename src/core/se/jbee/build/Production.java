@@ -33,4 +33,9 @@ public final class Production {
 	public Production with( Producer producer ) {
 		return new Production( productions, source, outcome, producer );
 	}
+
+	@Override
+	public String toString() {
+		return source + " -> " + outcome + " [" + producer + "]";
+	}
 }

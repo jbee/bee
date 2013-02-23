@@ -92,6 +92,18 @@ public final class Goal
 				: outcome + " " + Arrays.toString( boundary );
 		}
 
+		public boolean concernsModule( Name name ) {
+			if ( boundary.length == 0 ) {
+				return true;
+			}
+			for ( Module m : boundary ) {
+				if ( m.name.isEqual( name ) ) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		@Override
 		public Iterator<Module> iterator() {
 			return Arrays.asList( boundary ).iterator();

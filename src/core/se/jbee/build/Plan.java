@@ -1,8 +1,10 @@
 package se.jbee.build;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +23,7 @@ public class Plan
 		implements Builder, Goals, Modules, Productions {
 
 	private final Map<Name, Goal> goals = new HashMap<Name, Goal>();
-	private final Map<Name, Module> modules = new HashMap<Name, Module>();
+	private final Map<Name, Module> modules = new LinkedHashMap<Name, Module>(); // need to iterate in reverse sequence of adding
 	private final Map<Artifact, Set<Name>> sources = new HashMap<Artifact, Set<Name>>();
 	private final Map<Artifact, Production> productions = new HashMap<Artifact, Production>();
 
@@ -81,6 +83,14 @@ public class Plan
 		Goal g = goals.get( goal );
 		List<Step> steps = new ArrayList<Step>();
 		for ( Subgoal sg : g ) {
+			Production p = productions.get( sg.outcome );
+			ArrayList<Module> reverse = new ArrayList<Module>( this.modules.values() );
+			Collections.reverse( reverse );
+			for ( Module m : reverse ) {
+				if ( sg.concernsModule( m.name ) ) {
+					steps.add( Step.step( m, p ) );
+				}
+			}
 		}
 		return steps.toArray( new Step[steps.size()] );
 	}

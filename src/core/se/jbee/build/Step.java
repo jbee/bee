@@ -20,4 +20,8 @@ public class Step {
 		this.production = production;
 	}
 
+	@Override
+	public String toString() {
+		return module + ": " + production;
+	}
 }
