@@ -14,6 +14,7 @@ public class TestExampleBuild {
 		ExampleBuild.class.newInstance().build( Project.project( plan ) );
 		assertTrue( plan.canProduce( Artifact._class ) );
 		Step[] steps = plan.execution( named( "compile" ) );
+		steps = plan.execution( named( "javadoc" ) );
 		System.out.println( steps );
 	}
 }
