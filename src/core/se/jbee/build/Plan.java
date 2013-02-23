@@ -1,10 +1,8 @@
 package se.jbee.build;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +21,7 @@ public class Plan
 		implements Builder, Goals, Modules, Productions {
 
 	private final Map<Name, Goal> goals = new HashMap<Name, Goal>();
-	private final Map<Name, Module> modules = new LinkedHashMap<Name, Module>(); // need to iterate in reverse sequence of adding
+	private final List<Module> modules = new ArrayList<Module>();
 	private final Map<Artifact, Set<Name>> sources = new HashMap<Artifact, Set<Name>>();
 	private final Map<Artifact, Production> productions = new HashMap<Artifact, Production>();
 
@@ -37,9 +35,9 @@ public class Plan
 
 	@Override
 	public Module module( Name name, Module... parents ) {
-		final Module module = modules.get( name );
-		return module != null
-			? module
+		int index = moduleIndex( name );
+		return index >= 0
+			? modules.get( index )
 			: Module.module( name, this, parents );
 	}
 
@@ -58,8 +56,13 @@ public class Plan
 
 	@Override
 	public void update( Module module ) {
-		modules.put( module.name, module );
-		for ( Artifact a : module ) {
+		int index = moduleIndex( module.name );
+		if ( index < 0 ) {
+			modules.add( module );
+		} else {
+			modules.set( index, module );
+		}
+		for ( Artifact a : module.artifacts() ) {
 			Set<Name> s = sources.get( a );
 			if ( s == null ) {
 				s = new HashSet<Name>();
@@ -74,6 +77,15 @@ public class Plan
 		productions.put( production.outcome, production );
 	}
 
+	private int moduleIndex( Name name ) {
+		for ( int i = 0; i < modules.size(); i++ ) {
+			if ( modules.get( i ).name.isEqual( name ) ) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public boolean canProduce( Artifact outcome ) {
 		Production p = productions.get( outcome );
 		return p != null && sources.containsKey( p.source );
@@ -84,14 +96,26 @@ public class Plan
 		List<Step> steps = new ArrayList<Step>();
 		for ( Subgoal sg : g ) {
 			Production p = productions.get( sg.outcome );
-			ArrayList<Module> reverse = new ArrayList<Module>( this.modules.values() );
-			Collections.reverse( reverse );
-			for ( Module m : reverse ) {
+			Set<Name> required = new HashSet<Name>();
+			for ( Module m : this.modules ) {
 				if ( sg.concernsModule( m.name ) ) {
+					required.add( m.name );
+					addParents( required, m );
+				}
+			}
+			for ( Module m : this.modules ) {
+				if ( required.contains( m.name ) ) {
 					steps.add( Step.step( m, p ) );
 				}
 			}
 		}
 		return steps.toArray( new Step[steps.size()] );
+	}
+
+	private static void addParents( Set<Name> required, Module m ) {
+		for ( Module parent : m ) {
+			required.add( parent.name );
+			addParents( required, parent );
+		}
 	}
 }

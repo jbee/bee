@@ -31,7 +31,7 @@ import java.util.Iterator;
  * @author Jan Bernitt (jan@jbee.se)
  */
 public final class Module
-		implements Iterable<Artifact> {
+		implements Iterable<Module> {
 
 	public static interface Modules {
 
@@ -78,12 +78,16 @@ public final class Module
 	}
 
 	@Override
-	public Iterator<Artifact> iterator() {
-		return Arrays.asList( artifacts ).iterator();
+	public Iterator<Module> iterator() {
+		return Arrays.asList( parents ).iterator();
 	}
 
 	@Override
 	public String toString() {
 		return name + " " + Arrays.toString( artifacts );
+	}
+
+	public Iterable<Artifact> artifacts() {
+		return Arrays.asList( artifacts );
 	}
 }
