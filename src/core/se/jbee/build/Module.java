@@ -1,5 +1,8 @@
 package se.jbee.build;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 /**
  * All modules are direct sub-folders of the {@link Src}.
  * 
@@ -27,7 +30,8 @@ package se.jbee.build;
  * 
  * @author Jan Bernitt (jan@jbee.se)
  */
-public final class Module {
+public final class Module
+		implements Iterable<Artifact> {
 
 	public static interface Modules {
 
@@ -77,5 +81,15 @@ public final class Module {
 
 	public Module uses( Library... libraries ) {
 		return new Module( name, modules, artifacts, parents, libraries );
+	}
+
+	@Override
+	public Iterator<Artifact> iterator() {
+		return Arrays.asList( artifacts ).iterator();
+	}
+
+	@Override
+	public String toString() {
+		return name + " " + Arrays.toString( artifacts );
 	}
 }

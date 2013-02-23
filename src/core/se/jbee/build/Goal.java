@@ -25,23 +25,23 @@ public final class Goal {
 	public final Name name;
 	private final Goals goals;
 	private final Subgoal[] subgoals;
-	private final Subgoal[] allowes;
+	private final Subgoal[] maybes;
 
-	private Goal( Name name, Goals goals, Subgoal[] subgoals, Subgoal[] allowes ) {
+	private Goal( Name name, Goals goals, Subgoal[] subgoals, Subgoal[] maybes ) {
 		super();
 		this.name = name;
 		this.goals = goals;
 		this.subgoals = subgoals;
-		this.allowes = allowes;
+		this.maybes = maybes;
 		goals.update( this );
 	}
 
 	public Goal in( Module... modules ) {
-		final Subgoal[] bound = allowes.length == 0
+		final Subgoal[] bound = maybes.length == 0
 			? subgoals
-			: allowes;
+			: maybes;
 		Subgoal[] copy = boundary( bound, modules );
-		return new Goal( name, goals, copy, allowes );
+		return new Goal( name, goals, copy, maybes );
 	}
 
 	private static Subgoal[] boundary( Subgoal[] a, Module... modules ) {
@@ -51,15 +51,15 @@ public final class Goal {
 	}
 
 	public Goal is( Artifact artifact ) {
-		return new Goal( name, goals, prepanded( artifact, subgoals ), allowes );
+		return new Goal( name, goals, prepanded( artifact, subgoals ), maybes );
 	}
 
-	public Goal allows( Artifact artifact ) {
-		return new Goal( name, goals, subgoals, prepanded( artifact, allowes ) );
+	public Goal mayBe( Artifact artifact ) {
+		return new Goal( name, goals, subgoals, prepanded( artifact, maybes ) );
 	}
 
 	private static Subgoal[] prepanded( Artifact artifact, Subgoal[] a ) {
-		Subgoal[] prepanded = new Subgoal[a.length];
+		Subgoal[] prepanded = new Subgoal[a.length + 1];
 		System.arraycopy( a, 0, prepanded, 1, a.length );
 		prepanded[0] = new Subgoal( artifact, NO_BOUNDARY );
 		return prepanded;

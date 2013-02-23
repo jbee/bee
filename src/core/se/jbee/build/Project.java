@@ -11,6 +11,10 @@ import static se.jbee.build.Name.named;
 public final class Project
 		implements Builder {
 
+	public static Project project( Builder builder ) {
+		return new Project( builder );
+	}
+
 	private final Builder builder;
 
 	private Project( Builder builder ) {
@@ -20,7 +24,7 @@ public final class Project
 
 	@Override
 	public Module module( Name name ) {
-		return module( name );
+		return builder.module( name );
 	}
 
 	public Module module( String name ) {

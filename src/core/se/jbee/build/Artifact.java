@@ -26,4 +26,22 @@ public final class Artifact {
 		this.version = version;
 	}
 
+	@Override
+	public boolean equals( Object obj ) {
+		return obj instanceof Artifact && isEqual( (Artifact) obj );
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode() ^ version.hashCode();
+	}
+
+	public boolean isEqual( Artifact other ) {
+		return type == other.type && name.isEqual( other.name ) && version.isEqual( other.version );
+	}
+
+	@Override
+	public String toString() {
+		return name + " " + version + " " + type;
+	}
 }

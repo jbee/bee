@@ -15,7 +15,7 @@ public class ExampleBuild
 		Module db = project.module( "db" ).includes( java_vx ).uses( main );
 		Module test = project.module( "test" ).includes( java_vx ).uses( main );
 
-		project.goal( "compile" ).is( class_vx ).allows( class_vx );
+		project.goal( "compile" ).is( class_vx ).mayBe( class_vx );
 		project.goal( "test-compile" ).is( class_vx ).in( test );
 	}
 

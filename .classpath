@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="test/core"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="TOOLS_LIB" sourcepath="/TOOLS_SRC"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="target/misc"/>
 </classpath>
