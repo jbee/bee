@@ -9,7 +9,7 @@ public class TestExampleBuild {
 	@Test
 	public void thatContextCanBeCreated()
 			throws Exception {
-		Context context = new Context();
+		Plan context = new Plan();
 		ExampleBuild.class.newInstance().build( Project.project( context ) );
 		assertTrue( context.canProduce( Artifact.class_vx ) );
 	}

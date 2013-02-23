@@ -23,12 +23,12 @@ public final class Project
 	}
 
 	@Override
-	public Module module( Name name ) {
-		return builder.module( name );
+	public final Module module( Name name, Module... parents ) {
+		return builder.module( name, parents );
 	}
 
-	public Module module( String name ) {
-		return module( named( name ) );
+	public Module module( String name, Module... parents ) {
+		return module( named( name ), parents );
 	}
 
 	@Override

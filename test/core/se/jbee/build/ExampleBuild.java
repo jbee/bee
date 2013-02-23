@@ -12,8 +12,8 @@ public class ExampleBuild
 		project.produce( class_vx ).from( java_vx ).with( Javac._1_6 );
 
 		Module main = project.module( "main" ).includes( java_vx );
-		Module db = project.module( "db" ).includes( java_vx ).uses( main );
-		Module test = project.module( "test" ).includes( java_vx ).uses( main );
+		Module db = project.module( "db", main ).includes( java_vx );
+		Module test = project.module( "test", main ).includes( java_vx );
 
 		project.goal( "compile" ).is( class_vx ).mayBe( class_vx );
 		project.goal( "test-compile" ).is( class_vx ).in( test );

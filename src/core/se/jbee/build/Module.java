@@ -40,11 +40,9 @@ public final class Module
 
 	private static final Artifact[] NO_ARTIFACTS = new Artifact[0];
 	private static final Library[] NO_LIBRARY_DEPENDENCIES = new Library[0];
-	private static final Module[] NO_MODULE_DEPENDENCIES = new Module[0];
 
-	public static Module module( Name name, Modules modules ) {
-		return new Module( name, modules, NO_ARTIFACTS, NO_MODULE_DEPENDENCIES,
-				NO_LIBRARY_DEPENDENCIES );
+	public static Module module( Name name, Modules modules, Module... parents ) {
+		return new Module( name, modules, NO_ARTIFACTS, parents, NO_LIBRARY_DEPENDENCIES );
 	}
 
 	public final Name name;
@@ -73,10 +71,6 @@ public final class Module
 	 */
 	public Module includes( Artifact... artifacts ) {
 		return new Module( name, modules, artifacts, parents, libraries );
-	}
-
-	public Module uses( Module... modules ) {
-		return new Module( name, this.modules, artifacts, modules, libraries );
 	}
 
 	public Module uses( Library... libraries ) {

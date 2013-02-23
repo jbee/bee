@@ -1,6 +1,9 @@
 package se.jbee.build;
 
 import java.util.Arrays;
+import java.util.Iterator;
+
+import se.jbee.build.Goal.Subgoal;
 
 /**
  * A {@link Goal} is a state or result (similar to an ant target). It is described by the set of
@@ -8,7 +11,8 @@ import java.util.Arrays;
  * 
  * @author Jan Bernitt (jan@jbee.se)
  */
-public final class Goal {
+public final class Goal
+		implements Iterable<Subgoal> {
 
 	public static interface Goals {
 
@@ -50,12 +54,12 @@ public final class Goal {
 		return copy;
 	}
 
-	public Goal is( Artifact artifact ) {
-		return new Goal( name, goals, prepanded( artifact, subgoals ), maybes );
+	public Goal is( Artifact outcome ) {
+		return new Goal( name, goals, prepanded( outcome, subgoals ), maybes );
 	}
 
-	public Goal mayBe( Artifact artifact ) {
-		return new Goal( name, goals, subgoals, prepanded( artifact, maybes ) );
+	public Goal mayBe( Artifact outcome ) {
+		return new Goal( name, goals, subgoals, prepanded( outcome, maybes ) );
 	}
 
 	private static Subgoal[] prepanded( Artifact artifact, Subgoal[] a ) {
@@ -65,31 +69,42 @@ public final class Goal {
 		return prepanded;
 	}
 
-	public static class Subgoal {
+	public static class Subgoal
+			implements Iterable<Module> {
 
-		private final Artifact artifact;
+		public final Artifact outcome;
 		private final Module[] boundary;
 
-		Subgoal( Artifact artifact, Module[] boundary ) {
+		Subgoal( Artifact outcome, Module[] boundary ) {
 			super();
-			this.artifact = artifact;
+			this.outcome = outcome;
 			this.boundary = boundary;
 		}
 
 		public Subgoal in( Module... modules ) {
-			return new Subgoal( artifact, modules );
+			return new Subgoal( outcome, modules );
 		}
 
 		@Override
 		public String toString() {
 			return boundary.length == 0
-				? artifact.toString()
-				: artifact + " " + Arrays.toString( boundary );
+				? outcome.toString()
+				: outcome + " " + Arrays.toString( boundary );
+		}
+
+		@Override
+		public Iterator<Module> iterator() {
+			return Arrays.asList( boundary ).iterator();
 		}
 	}
 
 	@Override
 	public String toString() {
 		return name + " " + Arrays.toString( subgoals );
+	}
+
+	@Override
+	public Iterator<Subgoal> iterator() {
+		return Arrays.asList( subgoals ).iterator();
 	}
 }
