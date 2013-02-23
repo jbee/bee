@@ -11,6 +11,8 @@ import com.sun.tools.javac.Main;
 public class Javac
 		implements Producer {
 
+	public static final Producer _1_6 = null;
+
 	@Override
 	public void produce( Artifacts input, Folder root ) {
 		// TODO Auto-generated method stub

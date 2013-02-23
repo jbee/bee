@@ -35,4 +35,9 @@ public final class Project
 	public Goal goal( String name ) {
 		return goal( named( name ) );
 	}
+
+	@Override
+	public Production produce( Artifact outcome ) {
+		return builder.produce( outcome );
+	}
 }

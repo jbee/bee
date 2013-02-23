@@ -6,4 +6,6 @@ public interface Builder {
 
 	Goal goal( Name name );
 
+	Production produce( Artifact outcome );
+
 }
