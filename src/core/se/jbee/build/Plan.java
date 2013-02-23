@@ -1,6 +1,7 @@
 package se.jbee.build;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -94,11 +95,12 @@ public class Plan
 	public Step[] execution( Name goal, Name... modules ) {
 		Goal g = goals.get( goal );
 		List<Step> steps = new ArrayList<Step>();
+		Set<Name> scope = new HashSet<Name>( Arrays.asList( modules ) );
 		for ( Subgoal sg : g ) {
 			Production p = productions.get( sg.outcome );
 			Set<Name> required = new HashSet<Name>();
 			for ( Module m : this.modules ) {
-				if ( sg.concernsModule( m.name ) ) {
+				if ( sg.concernsModule( m.name ) && ( scope.isEmpty() || scope.contains( m.name ) ) ) {
 					required.add( m.name );
 					addParents( required, m );
 				}
