@@ -7,26 +7,28 @@ import static se.jbee.build.Name.named;
  */
 public final class Artifact {
 
-	public static final Artifact _class = artifact( "classes", ArtifactType.BINARY_CODE, "*.class" );
-	public static final Artifact _java = artifact( "java", ArtifactType.SOURCE_CODE, "*.java" );
+	public static final Artifact _class = artifact( "classes", ArtifactType.BINARY_CODE,
+			Files.dot( "class" ) );
+	public static final Artifact _java = artifact( "java", ArtifactType.SOURCE_CODE,
+			Files.dot( "java" ) );
 	public static final Artifact javadoc = artifact( "javadoc", ArtifactType.DOCUMENTATION,
-			"*.html" );
+			Files.dot( "html" ) );
 
-	public static Artifact artifact( String name, ArtifactType type, String filePattern ) {
+	public static Artifact artifact( String name, ArtifactType type, Files filePattern ) {
 		return new Artifact( named( name ), type, Version.ANY, filePattern );
 	}
 
 	public final Name name;
 	public final ArtifactType type;
 	public final Version version;
-	public final String filePattern;
+	public final Files pattern;
 
-	private Artifact( Name name, ArtifactType type, Version version, String filePattern ) {
+	private Artifact( Name name, ArtifactType type, Version version, Files pattern ) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.version = version;
-		this.filePattern = filePattern;
+		this.pattern = pattern;
 	}
 
 	@Override

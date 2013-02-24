@@ -112,6 +112,7 @@ public final class Bootstrap {
 
 		@Override
 		public Step[] execution( Name goal, Name... modules ) {
+			//FIXME clean is not included
 			Goal g = goals.get( goal );
 			List<Step> steps = new ArrayList<Step>();
 			Set<Name> scope = new HashSet<Name>( Arrays.asList( modules ) );

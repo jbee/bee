@@ -9,15 +9,6 @@ package se.jbee.build;
  */
 public interface Producer {
 
-	/**
-	 * 
-	 * @param input
-	 *            The set of {@link Artifacts} that is processed.
-	 * @param root
-	 *            The root {@link Folder} of the produced artifacts.
-	 */
-	void produce( Artifacts input, Folder root );
+	void produce( Instruction instruction );
 
-	// fluent interface example
-	// in(<module...>).produce(<artifact-class>).from(<artifact-class>).with(<producer>);
 }
