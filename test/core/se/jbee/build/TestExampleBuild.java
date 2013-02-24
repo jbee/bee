@@ -6,6 +6,9 @@ import static se.jbee.build.Artifact._java;
 import static se.jbee.build.Artifact.javadoc;
 import static se.jbee.build.Name.named;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 import org.junit.Test;
 
 import se.jbee.build.produce.Javac;
@@ -45,8 +48,14 @@ public class TestExampleBuild {
 	public void assertGoalSequence( String goal, String[] modules, String... expected ) {
 		Step[] steps = schedule.execution( named( goal ), named( modules ) );
 		assertTrue( steps.length >= modules.length );
-		for ( int i = 0; i < steps.length; i++ ) {
-			assertTrue( steps[i].module.name.isEqual( named( expected[i] ) ) );
+		LinkedList<String> expectedSequence = new LinkedList<String>( Arrays.asList( expected ) );
+		int i = 0;
+		while ( i < steps.length && !expectedSequence.isEmpty() ) {
+			if ( steps[i].module.name.isEqual( named( expectedSequence.get( 0 ) ) ) ) {
+				expectedSequence.pollFirst();
+			}
+			i++;
 		}
+		assertTrue( expectedSequence.isEmpty() );
 	}
 }
