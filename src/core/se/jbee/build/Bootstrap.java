@@ -20,27 +20,33 @@ import se.jbee.build.Production.Productions;
  */
 public final class Bootstrap {
 
-	public static Plan plan( Class<? extends Build> build ) {
-		Planer planer = new Planer();
-		Build b;
+	public static Schedule schedule( Class<? extends Build> build ) {
+		final Scheduler scheduler = new Scheduler();
+		newInstance( build ).build( Project.project( scheduler ) );
+		return scheduler;
+	}
+
+	private static Build newInstance( Class<? extends Build> build ) {
 		try {
-			b = build.newInstance();
+			return build.newInstance();
 		} catch ( Exception e ) {
 			throw new RuntimeException( e );
 		}
-		b.build( Project.project( planer ) );
-		return planer;
 	}
 
-	private static class Planer
-			implements Builder, Goals, Modules, Productions, Plan {
+	private static class Scheduler
+			implements Builder, Goals, Modules, Productions, Schedule {
 
-		private final Map<Name, Goal> goals = new HashMap<Name, Goal>();
+		/**
+		 * Since modules can just be created in an order starting with those having no parents they
+		 * will be in an order that works when processing them.
+		 */
 		private final List<Module> modules = new ArrayList<Module>();
+		private final Map<Name, Goal> goals = new HashMap<Name, Goal>();
 		private final Map<Artifact, Set<Name>> sources = new HashMap<Artifact, Set<Name>>();
 		private final Map<Artifact, Production> productions = new HashMap<Artifact, Production>();
 
-		Planer() {
+		Scheduler() {
 			// make visible
 		}
 

@@ -32,7 +32,7 @@ public class TestExampleBuild {
 
 	}
 
-	private final Plan plan = Bootstrap.plan( ExampleBuild.class );
+	private final Schedule schedule = Bootstrap.schedule( ExampleBuild.class );
 
 	@Test
 	public void thatGoalExectionHasCorrectSequence() {
@@ -43,7 +43,7 @@ public class TestExampleBuild {
 	}
 
 	public void assertGoalSequence( String goal, String[] modules, String... expected ) {
-		Step[] steps = plan.execution( named( goal ), named( modules ) );
+		Step[] steps = schedule.execution( named( goal ), named( modules ) );
 		assertTrue( steps.length >= modules.length );
 		for ( int i = 0; i < steps.length; i++ ) {
 			assertTrue( steps[i].module.name.isEqual( named( expected[i] ) ) );
