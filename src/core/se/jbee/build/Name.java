@@ -13,6 +13,14 @@ public final class Name {
 		return new Name( name );
 	}
 
+	public static Name[] named( String... names ) {
+		Name[] res = new Name[names.length];
+		for ( int i = 0; i < names.length; i++ ) {
+			res[i] = named( names[i] );
+		}
+		return res;
+	}
+
 	private final String name;
 
 	private Name( String name ) {
