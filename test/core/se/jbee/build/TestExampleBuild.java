@@ -51,7 +51,10 @@ public class TestExampleBuild {
 		LinkedList<String> expectedSequence = new LinkedList<String>( Arrays.asList( expected ) );
 		int i = 0;
 		while ( i < steps.length && !expectedSequence.isEmpty() ) {
-			if ( steps[i].module.name.isEqual( named( expectedSequence.get( 0 ) ) ) ) {
+			Step step = steps[i];
+			if ( step.production.source.type == ArtifactType.SOURCE_CODE
+					&& step.production.outcome.type == ArtifactType.BINARY_CODE
+					&& step.module.name.isEqual( named( expectedSequence.get( 0 ) ) ) ) {
 				expectedSequence.pollFirst();
 			}
 			i++;
