@@ -15,20 +15,29 @@ public final class Artifact {
 			Files.dot( "html" ) );
 
 	public static Artifact artifact( String name, ArtifactType type, Files filePattern ) {
-		return new Artifact( named( name ), type, Version.ANY, filePattern );
+		return new Artifact( named( name ), type, Version.ANY, filePattern, false );
 	}
 
 	public final Name name;
 	public final ArtifactType type;
 	public final Version version;
 	public final Files pattern;
+	/**
+	 * A global artifact does not apply to each module but instead "joins" the content per project.
+	 */
+	public final boolean global;
 
-	private Artifact( Name name, ArtifactType type, Version version, Files pattern ) {
+	private Artifact( Name name, ArtifactType type, Version version, Files pattern, boolean global ) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.version = version;
 		this.pattern = pattern;
+		this.global = global;
+	}
+
+	public Artifact global() {
+		return new Artifact( name, type, version, pattern, true );
 	}
 
 	@Override

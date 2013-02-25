@@ -117,13 +117,16 @@ public final class Bootstrap {
 		}
 
 		@Override
-		public Step[] execution( Name goal, Name... modules ) {
+		public Task[] execution( Name goal, Name... modules ) {
 			//FIXME clean is not included
 			Goal g = goals.get( goal );
-			List<Step> steps = new ArrayList<Step>();
+			List<Task> steps = new ArrayList<Task>();
 			Set<Name> scope = new HashSet<Name>( Arrays.asList( modules ) );
 			for ( Subgoal sg : g ) {
 				Production p = productions.get( sg.outcome );
+				int stage = 0;
+				Set<Name> staged = new HashSet<Name>(); // modules in current stage
+				Set<Name> done = new HashSet<Name>(); // modules that we took care of
 				Set<Name> required = new HashSet<Name>();
 				for ( Module m : this.modules ) {
 					if ( sg.concernsModule( m.name )
@@ -134,11 +137,11 @@ public final class Bootstrap {
 				}
 				for ( Module m : this.modules ) {
 					if ( required.contains( m.name ) ) {
-						steps.add( Step.step( m, p ) );
+						steps.add( Task.task( m, p ) );
 					}
 				}
 			}
-			return steps.toArray( new Step[steps.size()] );
+			return steps.toArray( new Task[steps.size()] );
 		}
 
 		private static void addParents( Set<Name> required, Module m ) {

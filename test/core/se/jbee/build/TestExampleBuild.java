@@ -46,12 +46,12 @@ public class TestExampleBuild {
 	}
 
 	public void assertGoalSequence( String goal, String[] modules, String... expected ) {
-		Step[] steps = schedule.execution( named( goal ), named( modules ) );
+		Task[] steps = schedule.execution( named( goal ), named( modules ) );
 		assertTrue( steps.length >= modules.length );
 		LinkedList<String> expectedSequence = new LinkedList<String>( Arrays.asList( expected ) );
 		int i = 0;
 		while ( i < steps.length && !expectedSequence.isEmpty() ) {
-			Step step = steps[i];
+			Task step = steps[i];
 			if ( step.production.source.type == ArtifactType.SOURCE_CODE
 					&& step.production.outcome.type == ArtifactType.BINARY_CODE
 					&& step.module.name.isEqual( named( expectedSequence.get( 0 ) ) ) ) {
