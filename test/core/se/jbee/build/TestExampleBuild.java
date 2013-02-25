@@ -28,9 +28,9 @@ public class TestExampleBuild {
 			Module db = project.module( "db", main ).includes( _java );
 			Module test = project.module( "test", main ).includes( _java );
 
-			project.goal( "compile" ).is( _class ).mayBe( _class );
+			project.goal( "compile" ).is( _class );
 			project.goal( "test-compile" ).is( _class ).in( test );
-			project.goal( "javadoc" ).is( javadoc );
+			project.goal( "javadoc" ).is( javadoc ).keepByproducts();
 		}
 
 	}

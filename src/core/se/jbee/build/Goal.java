@@ -3,8 +3,6 @@ package se.jbee.build;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import se.jbee.build.Goal.Subgoal;
-
 /**
  * A {@link Goal} is a state or result (similar to an ant target). It is described by the set of
  * artifacts that are given and those that are not given (any longer).
@@ -12,7 +10,7 @@ import se.jbee.build.Goal.Subgoal;
  * @author Jan Bernitt (jan@jbee.se)
  */
 public final class Goal
-		implements Iterable<Subgoal> {
+		implements Iterable<se.jbee.build.Goal.Subgoal> {
 
 	public static interface Goals {
 
@@ -23,29 +21,29 @@ public final class Goal
 	private static final Subgoal[] NO_SUBGOALS = new Subgoal[0];
 
 	public static Goal goal( Name name, Goals goals ) {
-		return new Goal( name, goals, NO_SUBGOALS, NO_SUBGOALS );
+		return new Goal( name, goals, NO_SUBGOALS, false );
 	}
 
 	public final Name name;
 	private final Goals goals;
 	private final Subgoal[] subgoals;
-	private final Subgoal[] maybes;
+	public final boolean keepByproducts;
 
-	private Goal( Name name, Goals goals, Subgoal[] subgoals, Subgoal[] maybes ) {
+	private Goal( Name name, Goals goals, Subgoal[] subgoals, boolean keepByproducts ) {
 		super();
 		this.name = name;
 		this.goals = goals;
 		this.subgoals = subgoals;
-		this.maybes = maybes;
+		this.keepByproducts = keepByproducts;
 		goals.update( this );
 	}
 
+	public Goal keepByproducts() {
+		return new Goal( name, goals, subgoals, true );
+	}
+
 	public Goal in( Module... modules ) {
-		final Subgoal[] bound = maybes.length == 0
-			? subgoals
-			: maybes;
-		Subgoal[] copy = boundary( bound, modules );
-		return new Goal( name, goals, copy, maybes );
+		return new Goal( name, goals, boundary( subgoals, modules ), keepByproducts );
 	}
 
 	private static Subgoal[] boundary( Subgoal[] a, Module... modules ) {
@@ -55,11 +53,7 @@ public final class Goal
 	}
 
 	public Goal is( Artifact outcome ) {
-		return new Goal( name, goals, prepanded( outcome, subgoals ), maybes );
-	}
-
-	public Goal mayBe( Artifact outcome ) {
-		return new Goal( name, goals, subgoals, prepanded( outcome, maybes ) );
+		return new Goal( name, goals, prepanded( outcome, subgoals ), keepByproducts );
 	}
 
 	private static Subgoal[] prepanded( Artifact artifact, Subgoal[] a ) {
@@ -67,6 +61,16 @@ public final class Goal
 		System.arraycopy( a, 0, prepanded, 1, a.length );
 		prepanded[0] = new Subgoal( artifact, NO_BOUNDARY );
 		return prepanded;
+	}
+
+	@Override
+	public String toString() {
+		return name + " " + Arrays.toString( subgoals );
+	}
+
+	@Override
+	public Iterator<Subgoal> iterator() {
+		return Arrays.asList( subgoals ).iterator();
 	}
 
 	public static class Subgoal
@@ -110,13 +114,4 @@ public final class Goal
 		}
 	}
 
-	@Override
-	public String toString() {
-		return name + " " + Arrays.toString( subgoals );
-	}
-
-	@Override
-	public Iterator<Subgoal> iterator() {
-		return Arrays.asList( subgoals ).iterator();
-	}
 }

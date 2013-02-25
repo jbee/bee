@@ -20,12 +20,14 @@ public class Server {
 			throws Exception {
 		ServerSocket acceptor = new ServerSocket( 9999 );
 		System.out.println( "On port " + acceptor.getLocalPort() );
-		while ( true ) {
+		boolean quit = false;
+		while ( !quit ) {
 			Socket client = acceptor.accept();
 			BufferedReader in = new BufferedReader( new InputStreamReader( client.getInputStream() ) );
-			System.out.println( in.readLine() );
+			String line = in.readLine();
+			System.out.println( line );
+			quit = "quit".equals( line.trim() );
 			client.close();
 		}
-
 	}
 }
