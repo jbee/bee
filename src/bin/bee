@@ -1,0 +1,6 @@
+#bin/bash
+TSMP=$(date +%s)
+echo "$TSMP $PWD $*" > /dev/tcp/localhost/9999
+touch $TSMP.build
+tail -f $TSMP.build | awk '/.*/;/Done/ { exit }'
+rm $TSMP.build
