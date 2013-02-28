@@ -24,6 +24,15 @@ public final class Artifacts
 		this.artifacts = artifacts;
 	}
 
+	public boolean all( ArtifactType type ) {
+		for ( int i = 0; i < artifacts.length; i++ ) {
+			if ( artifacts[i].type != type ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public Iterator<Artifact> iterator() {
 		return Arrays.asList( artifacts ).iterator();

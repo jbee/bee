@@ -58,7 +58,7 @@ public class TestExampleBuild {
 		int i = 0;
 		while ( i < steps.length && !expectedSequence.isEmpty() ) {
 			Task step = steps[i];
-			if ( step.production.source.type == ArtifactType.SOURCE
+			if ( step.production.sources.all( ArtifactType.SOURCE )
 					&& step.production.outcome.type == ArtifactType.BINARY
 					&& step.module.name.isEqual( named( expectedSequence.get( 0 ) ) ) ) {
 				expectedSequence.pollFirst();

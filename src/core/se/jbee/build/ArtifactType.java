@@ -3,7 +3,9 @@ package se.jbee.build;
 public enum ArtifactType {
 
 	/**
-	 * e.g a java file
+	 * Sources are expected to exist in the src folders of the different modules.
+	 * 
+	 * e.g a java file.
 	 */
 	SOURCE,
 	/**

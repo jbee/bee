@@ -3,7 +3,7 @@ package se.jbee.build;
 public final class Production {
 
 	public static Production production( Artifact outcome, Productions productions ) {
-		return new Production( productions, outcome, outcome, null );
+		return new Production( productions, Artifacts.NONE, outcome, null );
 	}
 
 	public static interface Productions {
@@ -11,15 +11,15 @@ public final class Production {
 		void update( Production production );
 	}
 
-	public final Artifact source; //TODO could be more than one
+	public final Artifacts sources;
 	public final Artifact outcome;
 	public final Producer producer;
 	private final Productions productions;
 
-	private Production( Productions productions, Artifact source, Artifact outcome,
+	private Production( Productions productions, Artifacts sources, Artifact outcome,
 			Producer producer ) {
 		super();
-		this.source = source;
+		this.sources = sources;
 		this.outcome = outcome;
 		this.producer = producer;
 		this.productions = productions;
@@ -27,15 +27,19 @@ public final class Production {
 	}
 
 	public Production from( Artifact source ) {
-		return new Production( productions, source, outcome, producer );
+		return from( Artifacts.artifacts( source ) );
+	}
+
+	public Production from( Artifacts sources ) {
+		return new Production( productions, sources, outcome, producer );
 	}
 
 	public Production with( Producer producer ) {
-		return new Production( productions, source, outcome, producer );
+		return new Production( productions, sources, outcome, producer );
 	}
 
 	@Override
 	public String toString() {
-		return source + " -> " + outcome + " [" + producer + "]";
+		return sources + " -> " + outcome + " [" + producer + "]";
 	}
 }

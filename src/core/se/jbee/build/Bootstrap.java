@@ -59,7 +59,7 @@ public final class Bootstrap {
 			Iterator<Production> i = left.iterator();
 			while ( i.hasNext() ) {
 				Production p = i.next();
-				if ( p.source.type == ArtifactType.SOURCE ) {
+				if ( p.sources.all( ArtifactType.SOURCE ) ) {
 					sorted.put( p.outcome, p );
 					i.remove();
 				}
@@ -69,7 +69,11 @@ public final class Bootstrap {
 				i = left.iterator();
 				while ( i.hasNext() ) {
 					Production p = i.next();
-					if ( sorted.containsKey( p.source ) ) {
+					Iterator<Artifact> source = p.sources.iterator();
+					while ( source.hasNext() && sorted.containsKey( source.next() ) ) {
+						//
+					}
+					if ( !source.hasNext() ) {
 						sorted.put( p.outcome, p );
 						i.remove();
 					}
@@ -78,7 +82,7 @@ public final class Bootstrap {
 					Production missing = left.get( 0 );
 					throw new IllegalStateException(
 							"Found no production rule to create artifacts of type: "
-									+ missing.source + "\nwhat is needed to produce: "
+									+ missing.sources + "\nwhat is needed to produce: "
 									+ missing.outcome );
 				}
 			}
@@ -143,11 +147,6 @@ public final class Bootstrap {
 				}
 			}
 			return -1;
-		}
-
-		public boolean canProduce( Artifact outcome ) {
-			Production p = productions.get( outcome );
-			return p != null && sourcesInModules.containsKey( p.source );
 		}
 
 		@Override
