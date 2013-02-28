@@ -11,7 +11,7 @@ public final class Production {
 		void update( Production production );
 	}
 
-	public final Artifact source;
+	public final Artifact source; //TODO could be more than one
 	public final Artifact outcome;
 	public final Producer producer;
 	private final Productions productions;

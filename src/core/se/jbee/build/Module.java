@@ -38,20 +38,19 @@ public final class Module
 		void update( Module module );
 	}
 
-	private static final Artifact[] NO_ARTIFACTS = new Artifact[0];
 	private static final Library[] NO_LIBRARY_DEPENDENCIES = new Library[0];
 
 	public static Module module( Name name, Modules modules, Module... parents ) {
-		return new Module( name, modules, NO_ARTIFACTS, parents, NO_LIBRARY_DEPENDENCIES );
+		return new Module( name, modules, Artifacts.NONE, parents, NO_LIBRARY_DEPENDENCIES );
 	}
 
 	public final Name name;
+	public final Artifacts artifacts;
 	private final Modules modules;
-	private final Artifact[] artifacts;
 	private final Module[] parents;
 	private final Library[] libraries;
 
-	private Module( Name name, Modules modules, Artifact[] artifacts, Module[] parents,
+	private Module( Name name, Modules modules, Artifacts artifacts, Module[] parents,
 			Library[] libraries ) {
 		super();
 		this.name = name;
@@ -70,7 +69,7 @@ public final class Module
 	 * @return
 	 */
 	public Module includes( Artifact... artifacts ) {
-		return new Module( name, modules, artifacts, parents, libraries );
+		return new Module( name, modules, Artifacts.artifacts( artifacts ), parents, libraries );
 	}
 
 	public Module uses( Library... libraries ) {
@@ -84,10 +83,6 @@ public final class Module
 
 	@Override
 	public String toString() {
-		return name + " " + Arrays.toString( artifacts );
-	}
-
-	public Iterable<Artifact> artifacts() {
-		return Arrays.asList( artifacts );
+		return name + " " + artifacts;
 	}
 }

@@ -11,12 +11,13 @@ public final class Artifact {
 
 	private static final EnumSet<ArtifactMode> DEFAULT_MODES = EnumSet.of( ArtifactMode.CLEAN );
 
-	public static final Artifact _class = artifact( "classes", ArtifactType.BINARY_CODE,
+	public static final Artifact _class = artifact( "classes", ArtifactType.BINARY,
 			Files.dot( "class" ) );
-	public static final Artifact _java = artifact( "java", ArtifactType.SOURCE_CODE,
+	public static final Artifact _java = artifact( "java", ArtifactType.SOURCE,
 			Files.dot( "java" ) );
 	public static final Artifact javadoc = artifact( "javadoc", ArtifactType.DOCUMENTATION,
 			Files.dot( "html" ) );
+	public static final Artifact _jar = artifact( "jar", ArtifactType.ARCHIVE, Files.dot( "jar" ) ).project();
 
 	public static Artifact artifact( String name, ArtifactType type, Files filePattern ) {
 		return new Artifact( named( name ), type, Version.ANY, filePattern, DEFAULT_MODES );

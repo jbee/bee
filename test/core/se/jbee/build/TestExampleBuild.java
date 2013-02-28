@@ -2,7 +2,9 @@ package se.jbee.build;
 
 import static org.junit.Assert.assertTrue;
 import static se.jbee.build.Artifact._class;
+import static se.jbee.build.Artifact._jar;
 import static se.jbee.build.Artifact._java;
+import static se.jbee.build.Artifact.artifact;
 import static se.jbee.build.Artifact.javadoc;
 import static se.jbee.build.Name.named;
 
@@ -19,9 +21,14 @@ public class TestExampleBuild {
 	public static class ExampleBuild
 			implements Build {
 
+		private static final Artifact _zip = artifact( "zip", ArtifactType.ARCHIVE,
+				Files.dot( "zip" ) );
+
 		@Override
 		public void build( Project project ) {
+			project.produce( _jar ).from( _class ).with( Javac._1_6 );
 			project.produce( _class ).from( _java ).with( Javac._1_6 );
+			project.produce( _zip ).from( _jar );
 			project.produce( javadoc ).from( _java ).with( Javadoc._1_6 );
 
 			Module main = project.module( "main" ).includes( _java );
@@ -32,7 +39,6 @@ public class TestExampleBuild {
 			project.goal( "test-compile" ).is( _class ).in( test );
 			project.goal( "javadoc" ).is( javadoc ).keepByproducts();
 		}
-
 	}
 
 	private final Schedule schedule = Bootstrap.schedule( ExampleBuild.class );
@@ -52,8 +58,8 @@ public class TestExampleBuild {
 		int i = 0;
 		while ( i < steps.length && !expectedSequence.isEmpty() ) {
 			Task step = steps[i];
-			if ( step.production.source.type == ArtifactType.SOURCE_CODE
-					&& step.production.outcome.type == ArtifactType.BINARY_CODE
+			if ( step.production.source.type == ArtifactType.SOURCE
+					&& step.production.outcome.type == ArtifactType.BINARY
 					&& step.module.name.isEqual( named( expectedSequence.get( 0 ) ) ) ) {
 				expectedSequence.pollFirst();
 			}

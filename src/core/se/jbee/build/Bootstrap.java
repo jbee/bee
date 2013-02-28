@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +25,7 @@ public final class Bootstrap {
 	public static Schedule schedule( Class<? extends Build> build ) {
 		final Scheduler scheduler = new Scheduler();
 		newInstance( build ).build( Project.project( scheduler ) );
+		scheduler.init();
 		return scheduler;
 	}
 
@@ -34,7 +37,7 @@ public final class Bootstrap {
 		}
 	}
 
-	private static class Scheduler
+	private static final class Scheduler
 			implements Builder, Goals, Modules, Productions, Schedule {
 
 		/**
@@ -43,11 +46,42 @@ public final class Bootstrap {
 		 */
 		private final List<Module> modules = new ArrayList<Module>();
 		private final Map<Name, Goal> goals = new HashMap<Name, Goal>();
-		private final Map<Artifact, Set<Name>> sources = new HashMap<Artifact, Set<Name>>();
+		private final Map<Artifact, Set<Name>> sourcesInModules = new HashMap<Artifact, Set<Name>>();
 		private final Map<Artifact, Production> productions = new HashMap<Artifact, Production>();
 
 		Scheduler() {
 			// make visible
+		}
+
+		void init() {
+			Map<Artifact, Production> sorted = new LinkedHashMap<Artifact, Production>();
+			ArrayList<Production> left = new ArrayList<Production>( productions.values() );
+			Iterator<Production> i = left.iterator();
+			while ( i.hasNext() ) {
+				Production p = i.next();
+				if ( p.source.type == ArtifactType.SOURCE ) {
+					sorted.put( p.outcome, p );
+					i.remove();
+				}
+			}
+			while ( !left.isEmpty() ) {
+				int size = left.size();
+				i = left.iterator();
+				while ( i.hasNext() ) {
+					Production p = i.next();
+					if ( sorted.containsKey( p.source ) ) {
+						sorted.put( p.outcome, p );
+						i.remove();
+					}
+				}
+				if ( left.size() == size ) {
+					Production missing = left.get( 0 );
+					throw new IllegalStateException(
+							"Found no production rule to create artifacts of type: "
+									+ missing.source + "\nwhat is needed to produce: "
+									+ missing.outcome );
+				}
+			}
 		}
 
 		@Override
@@ -87,11 +121,11 @@ public final class Bootstrap {
 			} else {
 				modules.set( index, module );
 			}
-			for ( Artifact a : module.artifacts() ) {
-				Set<Name> s = sources.get( a );
+			for ( Artifact a : module.artifacts ) {
+				Set<Name> s = sourcesInModules.get( a );
 				if ( s == null ) {
 					s = new HashSet<Name>();
-					sources.put( a, s );
+					sourcesInModules.put( a, s );
 				}
 				s.add( module.name );
 			}
@@ -113,7 +147,7 @@ public final class Bootstrap {
 
 		public boolean canProduce( Artifact outcome ) {
 			Production p = productions.get( outcome );
-			return p != null && sources.containsKey( p.source );
+			return p != null && sourcesInModules.containsKey( p.source );
 		}
 
 		@Override
