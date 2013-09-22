@@ -38,7 +38,7 @@ public final class Bootstrap {
 	}
 
 	private static final class Scheduler
-			implements Builder, Goals, Modules, Productions, Schedule {
+			implements Builder, Goals, Modules, Productions, Schedule, Buildable {
 
 		/**
 		 * Since modules can just be created in an order starting with those having no parents they
@@ -147,6 +147,12 @@ public final class Bootstrap {
 				}
 			}
 			return -1;
+		}
+
+		@Override
+		public Activity[] activities( Name goal, Name... modules ) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 		@Override

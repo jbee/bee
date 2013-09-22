@@ -30,6 +30,10 @@ public final class Production {
 		return from( Artifacts.artifacts( source ) );
 	}
 
+	public Production from( Artifact... sources ) {
+		return from( Artifacts.artifacts( sources ) );
+	}
+
 	public Production from( Artifacts sources ) {
 		return new Production( productions, sources, outcome, producer );
 	}

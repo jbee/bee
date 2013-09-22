@@ -69,7 +69,11 @@ public final class Module
 	 * @return
 	 */
 	public Module includes( Artifact... artifacts ) {
-		return new Module( name, modules, Artifacts.artifacts( artifacts ), parents, libraries );
+		return includes( Artifacts.artifacts( artifacts ) );
+	}
+
+	public Module includes( Artifacts artifacts ) {
+		return new Module( name, modules, artifacts, parents, libraries );
 	}
 
 	public Module uses( Library... libraries ) {
